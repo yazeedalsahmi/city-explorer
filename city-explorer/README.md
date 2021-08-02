@@ -32,7 +32,7 @@
 
 ## web request-response cycle
 
-![Alt Text](src/img/rr.PNG)
+![Alt Text](src/img/rr.)
 
 Name of feature: Asynchronous code, and APIs
 
