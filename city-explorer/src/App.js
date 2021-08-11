@@ -127,14 +127,15 @@ class App extends React.Component {
             </thead>
             {this.state.renderedLocWeatherData.map((element) => {
               return (<Weather
+              date={element.date}
                 description={element.description}
-                date={element.date}
+                
               />
               )
             })}
           </Table>
         }
-         <CardColumns>
+         {/* <CardColumns>
           {this.state.showMovie &&
           this.state.movieInfo.map(item=>(
             <Movie 
@@ -145,7 +146,7 @@ class App extends React.Component {
             vote={item.average_votes}
             />
           ))}
-        </CardColumns> 
+        </CardColumns>  */}
         
             {this.state.movieError && <p>error in getting data</p>}
 
