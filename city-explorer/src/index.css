@@ -15,3 +15,9 @@ code {
 *{
   color: black;
 }
+.card-columns {
+  background-color: teal;
+}
+.card-body {
+background-color: hotpink;
+}

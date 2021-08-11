@@ -1,12 +1,12 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { Form, Button, Card, Table } from 'react-bootstrap/';
+import { Form, Button, Card, Table, CardColumns } from 'react-bootstrap/';
 
 import axios from 'axios';
 
-import Weather from './component/weather';
-
+import Weather from './component/Weather';
+import Movie from './component/Movie';
 
 
 class App extends React.Component {
@@ -22,45 +22,68 @@ class App extends React.Component {
       showWeather: false,
       weatherErr: '',
       dspErrWeather: false,
+      movieInfo:'',
+      showMovie : false,
+      movieError:''
 
     }
   }
-
-
-  showData = async (event) => {
+  viewData = async (event) =>{
     event.preventDefault();
-
-    let inputCity = event.target.userInput.value;
-    let locURL = `https://us1.locationiq.com/v1/search.php?key=pk.370701c55ed7503519f7418b1098f8d2&q=${inputCity}&format=json`;
-    let weatherData = `${process.env.REACT_APP_URL}/weather?searchQuery=${inputCity}`;
-    try {
-      let locResult = await axios.get(locURL);
+    let selectCity = event.target.userInput.value;
+    let locationURL =`https://us1.locationiq.com/v1/search.php?key=pk.370701c55ed7503519f7418b1098f8d2&q=${selectCity}&format=json`;
+    console.log(locationURL);
+    let locValue = await axios.get(locationURL);
+    let weatherVal= locValue.data[0];
+    let weatherLat=weatherVal.lat;
+    let weatherLon=weatherVal.lon;
+    console.log(weatherLat);
+    console.log(weatherLon);
+    let weatherData = `${process.env.REACT_APP_URL}/weather?latitude=${weatherLat}&longitude=${weatherLon}`;
+    let movieDataInfo = `${process.env.REACT_APP_URL}/movies?city=${selectCity}`;
+    try{
+      let movieValue = await axios.get(movieDataInfo);
+      console.log(movieValue.data)
       this.setState({
-        dataRenderedInCard: locResult.data[0],
-        displayMap: true,
-        displarErrMsg: false,
+        movieInfo: movieValue.data,
+        showMovie: true
       })
-
+      console.log(this.state.movieInfo)
     }
-    catch {
-
+    catch(err){
       this.setState({
-        errorMsg: 'sorry , Error in response !!',
-        displayMap: false,
-        displarErrorMsg: true,
+        movieError: err,
+        showMovie: false
       })
-    };
-
-    try {
-      let locWeatherData = await axios.get(weatherData);
-      if (locWeatherData.data !== undefined) {
-        this.setState({
-          renderedLocWeatherData: locWeatherData.data,
-          showWeather: true,
-          dspErrWeather: false,
-        })
+    }
+  try {
+    
+    this.setState({
+      dataRenderedInCard: locValue.data[0],
+      displayMap:true,
+      displarErrorMsg:false,
+    })
+  }
+  catch{
+    this.setState({
+      errorMsg: 'sorry ,Error in response !!!',
+      displarErrorMsg : true,
+      displayMap : false,
+    })
+  }
+      try { 
+        let locWeatherValue = await axios.get(weatherData);
+        console.log(locWeatherValue);
+        if(locWeatherValue.data !== undefined){
+          this.setState({
+            renderedLocWeatherData: locWeatherValue.data,
+            showWeather: true,
+            dspErrWeather: false,
+          }) 
+        }
+        console.log(locWeatherValue.data)
       }
-    }
+
     catch {
       this.setState({
         weatherErr: 'sorry , no weather data availabe for your location',
@@ -70,11 +93,12 @@ class App extends React.Component {
       })
 
     }
-  }
+  };
+  
   render() {
     return (
       <div>
-        <Form onSubmit={this.showData}>
+        <Form onSubmit={this.viewData}>
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label>City Explorer</Form.Label>
             <Form.Control type="text" placeholder="Enter your city" name='userInput' />
@@ -85,7 +109,7 @@ class App extends React.Component {
         </Form>
 
         {this.state.displarErrorMsg || this.state.displayMap && <Card className="bg-dark text-white">
-          <Card.Img className='cardImg' src={`https://maps.locationiq.com/v3/staticmap?key=pk.370701c55ed7503519f7418b1098f8d2&center=${this.state.dataRenderedInCard.lat},${this.state.dataRenderedInCard.lon}`} alt="Card image" height='200px' />
+          <Card.Img className='cardImg' src={`https://maps.locationiq.com/v3/staticmap?key=pk.370701c55ed7503519f7418b1098f8d2&center=${this.state.dataRenderedInCard.lat},${this.state.dataRenderedInCard.lon}`} alt="Card image" height='500px' />
           <Card.ImgOverlay>
             <Card.Title>name : {this.state.dataRenderedInCard.display_name}</Card.Title>
             <Card.Text>lat : {this.state.dataRenderedInCard.lat}</Card.Text>
@@ -103,14 +127,28 @@ class App extends React.Component {
             </thead>
             {this.state.renderedLocWeatherData.map((element) => {
               return (<Weather
+              date={element.date}
                 description={element.description}
-                date={element.date}
+                
               />
               )
             })}
           </Table>
         }
-
+         {/* <CardColumns>
+          {this.state.showMovie &&
+          this.state.movieInfo.map(item=>(
+            <Movie 
+            Title={item.title}
+            description={item.overview}
+            imgURL={item.image_ur}
+            data={item.relesed_on}
+            vote={item.average_votes}
+            />
+          ))}
+        </CardColumns>  */}
+        
+            {this.state.movieError && <p>error in getting data</p>}
 
       </div>
     )
