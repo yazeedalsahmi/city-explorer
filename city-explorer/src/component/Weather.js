@@ -7,7 +7,7 @@ class Weather extends React.Component {
         return (
             <tbody>
                 <tr>
-                    <td>{this.props.data}</td>
+                    <td>{this.props.date}</td>
                     <td>{this.props.description}</td>
                 </tr>
             </tbody>

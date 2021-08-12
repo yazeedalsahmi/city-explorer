@@ -43,7 +43,7 @@ class App extends React.Component {
     let movieDataInfo = `${process.env.REACT_APP_URL}/movies?city=${selectCity}`;
     try{
       let movieValue = await axios.get(movieDataInfo);
-      console.log(movieValue.data)
+      console.log(movieValue)
       this.setState({
         movieInfo: movieValue.data,
         showMovie: true
@@ -135,19 +135,19 @@ class App extends React.Component {
             })}
           </Table>
         }
-         {/* <CardColumns>
+         <CardColumns>
           {this.state.showMovie &&
           this.state.movieInfo.map(item=>(
             <Movie 
             Title={item.title}
             description={item.overview}
             imgURL={item.image_ur}
-            data={item.relesed_on}
+            data={item.released_on}
             vote={item.average_votes}
             />
           ))}
-        </CardColumns>  */}
-        
+        </CardColumns>  
+         
             {this.state.movieError && <p>error in getting data</p>}
 
       </div>

@@ -11,7 +11,7 @@ class Movie extends React.Component {
             <p>{this.props.Title}</p>
             <p>{this.props.description}</p>
             <p>{this.props.data}</p>
-            
+            <img src={this.props.imgURL} alt="Girl in a jacket" width="500" height="600"></img>
             </div>
         )
 
