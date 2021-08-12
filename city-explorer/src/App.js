@@ -34,12 +34,12 @@ class App extends React.Component {
     let locationURL =`https://us1.locationiq.com/v1/search.php?key=pk.370701c55ed7503519f7418b1098f8d2&q=${selectCity}&format=json`;
     console.log(locationURL);
     let locValue = await axios.get(locationURL);
-    let weatherVal= locValue.data[0];
-    let weatherLat=weatherVal.lat;
-    let weatherLon=weatherVal.lon;
-    console.log(weatherLat);
-    console.log(weatherLon);
-    let weatherData = `${process.env.REACT_APP_URL}/weather?latitude=${weatherLat}&longitude=${weatherLon}`;
+    // let weatherVal= locValue.data[0];
+    // let weatherLat=weatherVal.lat;
+    // let weatherLon=weatherVal.lon;
+    // console.log(weatherLat);
+    // console.log(weatherLon);
+    let weatherData = `${process.env.REACT_APP_URL}/weather?searchQuery=${selectCity}`;
     let movieDataInfo = `${process.env.REACT_APP_URL}/movies?city=${selectCity}`;
     try{
       let movieValue = await axios.get(movieDataInfo);
